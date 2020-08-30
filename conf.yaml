@@ -7,7 +7,7 @@ records:
   - success:
     - type: FileContains
       file: "/home/safin/Documents/helios/hi.txt"
-      contains: hello
+      contains: "^hello"
 - message: Super cool vuln
   identifier: h2b5j2
   points: 10
@@ -22,5 +22,5 @@ records:
     - success:
         - type: CommandOutput
           command: "echo hello world"
-          output: "^hello"
+          contains: "^hello"
 

@@ -18,7 +18,13 @@ impl FileContains {
             Err(_) => return false,
         };
 
-        if content.contains(&self.contains) {
+        let re = Regex::new(&self.contains);
+        let re = match re {
+            Ok(r) => r,
+            Err(_) => return false,
+        };
+
+        if re.is_match(&content) {
             return true;
         }
         false
@@ -66,7 +72,7 @@ impl CommandExitCode {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandOutput {
     command: String,
-    output: String,
+    contains: String,
 }
 
 impl CommandOutput {
@@ -80,7 +86,7 @@ impl CommandOutput {
             Err(_) => return false,
         };
 
-        let re = Regex::new(&self.output);
+        let re = Regex::new(&self.contains);
         let re = match re {
             Ok(r) => r,
             Err(_) => return false,
