@@ -1,20 +1,27 @@
+use serde::{Deserialize, Serialize};
+use serde_json;
 use std::convert::From;
 use std::fs;
 
+#[derive(Debug, Serialize, Deserialize)]
 struct Config {
     title: String,
-    vulns: Vec<Record>,
+    records: Vec<Record>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 struct Record {
     message: String,
+    identifier: String,
     points: u8,
     checks: Vec<Check>,
 }
 
 impl Record {
     fn score(&self) -> Option<RepRecord> {
+        if self.identifier.is_empty() || self.identifier.len() != 6 {
+            panic!("Empty or invalid check identifier!");
+        }
         let mut got = true;
         for check in &self.checks {
             if let Some(s) = &check.success {
@@ -35,6 +42,7 @@ impl Record {
         if got {
             return Some(RepRecord {
                 message: self.message.clone(),
+                identifier: self.identifier.clone(),
                 points: self.points.clone(),
             });
         }
@@ -45,16 +53,18 @@ impl Record {
 #[derive(Debug)]
 struct RepRecord {
     message: String,
+    identifier: String,
     points: u8,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 struct Check {
     success: Option<Vec<Vuln>>,
     fail: Option<Vec<Vuln>>,
 }
 
-#[derive(Debug)]
+#[serde(tag = "type")]
+#[derive(Debug, Serialize, Deserialize)]
 enum Vuln {
     FileContains(FileContains),
 }
@@ -73,7 +83,7 @@ impl From<FileContains> for Vuln {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 struct FileContains {
     file: String,
     contains: String,
@@ -93,25 +103,14 @@ fn file_contains(obj: &FileContains) -> bool {
 }
 
 fn main() {
+    let config = fs::read_to_string("conf.json").expect("There was an error reading the config");
+    let config: Config =
+        serde_json::from_str(config.as_str()).expect("There was an error deserializing the config");
     let mut rep: Vec<RepRecord> = Vec::new();
-    let mut records: Vec<Record> = Vec::new();
-
-    records.push(Record {
-        message: "FileContains".into(),
-        points: 10,
-        checks: vec![Check {
-            success: Some(vec![FileContains {
-                file: "/home/safin/Documents/helios/hi.txt".into(),
-                contains: "hello".into(),
-            }
-            .into()]),
-            fail: None,
-        }],
-    });
 
     let mut score = 0;
     let mut count = 0;
-    for rec in records.into_iter() {
+    for rec in config.records.into_iter() {
         if let Some(r) = rec.score() {
             score += r.points;
             count += 1;
