@@ -37,3 +37,10 @@ records:
     - success:
         - type: UserExists
           user: test
+- message: bruh exists
+  identifier: br4kf3
+  points: 2
+  checks:
+    - success:
+        - type: GroupExists
+          group: bruh

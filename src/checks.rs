@@ -1,6 +1,6 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use users::get_user_by_name;
+use users::{get_group_by_name, get_user_by_name};
 
 use std::fs;
 use std::path::Path;
@@ -129,6 +129,22 @@ impl UserExists {
     #[cfg(target_os = "linux")]
     pub fn query(&self) -> bool {
         if let Some(_) = get_user_by_name(&self.user) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct GroupExists {
+    group: String,
+}
+
+impl GroupExists {
+    #[cfg(target_os = "linux")]
+    pub fn query(&self) -> bool {
+        if let Some(_) = get_group_by_name(&self.group) {
             return true;
         } else {
             return false;
