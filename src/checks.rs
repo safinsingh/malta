@@ -7,15 +7,17 @@ pub struct FileContains {
     contains: String,
 }
 
-pub fn file_contains(obj: &FileContains) -> bool {
-    let content = fs::read_to_string(&obj.file);
-    let content = match content {
-        Ok(s) => s,
-        Err(_) => return false,
-    };
+impl FileContains {
+    pub fn query(&self) -> bool {
+        let content = fs::read_to_string(&self.file);
+        let content = match content {
+            Ok(s) => s,
+            Err(_) => return false,
+        };
 
-    if content.contains(&obj.contains) {
-        return true;
+        if content.contains(&self.contains) {
+            return true;
+        }
+        false
     }
-    false
 }
