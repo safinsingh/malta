@@ -1,7 +1,7 @@
-title: Round title
+title: Safin's OP Round
 records:
-- message: bruh
-  identifier: asdttf
+- message: Removed vulnerability
+  identifier: a1b2c3
   points: 4
   checks:
   - success:

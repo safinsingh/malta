@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 use std::convert::From;
+use std::fmt;
 use std::fs;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -50,11 +51,20 @@ impl Record {
     }
 }
 
-#[derive(Debug)]
 struct RepRecord {
     message: String,
     identifier: String,
     points: u8,
+}
+
+impl fmt::Display for RepRecord {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{} ({}) - {} points",
+            self.message, self.identifier, self.points
+        )
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -118,8 +128,11 @@ fn main() {
         }
     }
 
+    println!("{}", config.title);
     println!("{} vulns, {} points", count, score);
     if count != 0 {
-        println!("{:?}", rep);
+        for rec in rep.into_iter() {
+            println!("{}", rec);
+        }
     }
 }
