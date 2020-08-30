@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use serde_json;
+use serde_yaml;
 use std::convert::From;
 use std::fs;
 
@@ -103,9 +103,9 @@ fn file_contains(obj: &FileContains) -> bool {
 }
 
 fn main() {
-    let config = fs::read_to_string("conf.json").expect("There was an error reading the config");
+    let config = fs::read_to_string("conf.yaml").expect("There was an error reading the config");
     let config: Config =
-        serde_json::from_str(config.as_str()).expect("There was an error deserializing the config");
+        serde_yaml::from_str(config.as_str()).expect("There was an error deserializing the config");
     let mut rep: Vec<RepRecord> = Vec::new();
 
     let mut score = 0;
