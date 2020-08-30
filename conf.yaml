@@ -30,4 +30,10 @@ records:
     - success:
         - type: FileExists
           path: /etc/passwd
-
+- message: safin exists
+  identifier: j53bt3
+  points: 2
+  checks:
+    - success:
+        - type: UserExists
+          user: test

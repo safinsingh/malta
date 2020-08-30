@@ -1,10 +1,12 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use users::get_user_by_name;
+
 use std::fs;
 use std::path::Path;
 use std::process::Command;
-use std::str;
 use std::process::Stdio;
+use std::str;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct FileContains {
@@ -115,5 +117,21 @@ pub struct FileExists {
 impl FileExists {
     pub fn query(&self) -> bool {
         return Path::new(&self.path).exists();
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct UserExists {
+    user: String,
+}
+
+impl UserExists {
+    #[cfg(target_os = "linux")]
+    pub fn query(&self) -> bool {
+        if let Some(_) = get_user_by_name(&self.user) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

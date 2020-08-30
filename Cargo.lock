@@ -10,6 +10,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "cfg-if"
+version = "0.1.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
+
+[[package]]
 name = "dtoa"
 version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -22,6 +28,7 @@ dependencies = [
  "regex",
  "serde",
  "serde_yaml",
+ "users",
 ]
 
 [[package]]
@@ -31,10 +38,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
+name = "libc"
+version = "0.2.76"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "755456fae044e6fa1ebbbd1b3e902ae19e73097ed4ed87bb79934a867c007bc3"
+
+[[package]]
 name = "linked-hash-map"
 version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8dd5a6d5999d9907cda8ed67bbd137d3af8085216c2ac62de5be860bd41f304a"
+
+[[package]]
+name = "log"
+version = "0.4.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4fabed175da42fed1fa0746b0ea71f412aa9d35e76e95e59b192c64b9dc2bf8b"
+dependencies = [
+ "cfg-if",
+]
 
 [[package]]
 name = "memchr"
@@ -135,6 +157,15 @@ name = "unicode-xid"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f7fe0bb3479651439c9112f72b6c505038574c9fbb575ed1bf3b797fa39dd564"
+
+[[package]]
+name = "users"
+version = "0.10.0"
+source = "git+https://github.com/ogham/rust-users.git#07bf842751d7f7ce1e9e342535d837c0e503e4f2"
+dependencies = [
+ "libc",
+ "log",
+]
 
 [[package]]
 name = "yaml-rust"

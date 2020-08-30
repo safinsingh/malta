@@ -93,6 +93,7 @@ enum Vuln {
     CommandExitCode(checks::CommandExitCode),
     CommandOutput(checks::CommandOutput),
     FileExists(checks::FileExists),
+    UserExists(checks::UserExists),
 }
 
 macro_rules! gen_evals {
@@ -112,7 +113,8 @@ impl Vuln {
             Self::FileContains,
             Self::CommandExitCode,
             Self::CommandOutput,
-            Self::FileExists
+            Self::FileExists,
+            Self::UserExists
         );
     }
 }
