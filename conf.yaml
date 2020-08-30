@@ -14,7 +14,7 @@ records:
   checks:
     - success:
         - type: CommandExitCode
-          command: "echo hi"
+          command: "echo hfhsadkfji"
 - message: Bruh is present
   identifier: j4g9g3
   points: 32
@@ -23,4 +23,11 @@ records:
         - type: CommandOutput
           command: "echo hello world"
           contains: "^hello"
+- message: passwd exists
+  identifier: j4k20v
+  points: 49
+  checks:
+    - success:
+        - type: FileExists
+          path: /etc/passwd
 
