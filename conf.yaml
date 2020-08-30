@@ -14,5 +14,13 @@ records:
   checks:
     - success:
         - type: CommandExitCode
-          command: "ecfffho"
+          command: "echo hi"
+- message: Bruh is present
+  identifier: j4g9g3
+  points: 32
+  checks:
+    - success:
+        - type: CommandOutput
+          command: "echo hello world"
+          output: "^hello"
 

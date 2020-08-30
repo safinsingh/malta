@@ -1,6 +1,8 @@
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::process::Command;
+use std::str;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct FileContains {
@@ -57,6 +59,42 @@ impl CommandExitCode {
                 }
             }
             None => return false,
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct CommandOutput {
+    command: String,
+    output: String,
+}
+
+impl CommandOutput {
+    pub fn query(&self) -> bool {
+        let mut args = self.command.split(' ');
+        let cmd = args.next().unwrap();
+
+        let out = Command::new(cmd).args(args).output();
+        let out = match out {
+            Ok(o) => o,
+            Err(_) => return false,
+        };
+
+        let re = Regex::new(&self.output);
+        let re = match re {
+            Ok(r) => r,
+            Err(_) => return false,
+        };
+
+        let stdout = str::from_utf8(&out.stdout);
+        if let Ok(s) = stdout {
+            if re.is_match(s) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 }

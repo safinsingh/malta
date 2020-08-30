@@ -4,7 +4,6 @@ use std::fmt;
 use std::fs;
 
 mod checks;
-//use checks::FileContains;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
@@ -84,6 +83,7 @@ struct Check {
 enum Vuln {
     FileContains(checks::FileContains),
     CommandExitCode(checks::CommandExitCode),
+    CommandOutput(checks::CommandOutput),
 }
 
 macro_rules! gen_evals {
@@ -98,7 +98,12 @@ macro_rules! gen_evals {
 
 impl Vuln {
     fn eval(&self) -> bool {
-        gen_evals!(self, Self::FileContains, Self::CommandExitCode);
+        gen_evals!(
+            self,
+            Self::FileContains,
+            Self::CommandExitCode,
+            Self::CommandOutput
+        );
     }
 }
 
