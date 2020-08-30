@@ -15,7 +15,7 @@ struct Config {
 struct Record {
     message: String,
     identifier: String,
-    points: u8,
+    points: i8,
     checks: Vec<Check>,
 }
 
@@ -55,16 +55,24 @@ impl Record {
 struct RepRecord {
     message: String,
     identifier: String,
-    points: u8,
+    points: i8,
 }
 
 impl fmt::Display for RepRecord {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "{} ({}) - {} points",
-            self.message, self.identifier, self.points
-        )
+        if self.points > 0 {
+            write!(
+                f,
+                "{} ({}) - {} points",
+                self.message, self.identifier, self.points
+            )
+        } else {
+            write!(
+                f,
+                "[PENALTY] {} ({}) - {} points",
+                self.message, self.identifier, self.points
+            )
+        }
     }
 }
 
@@ -124,7 +132,7 @@ fn main() {
             rep.push(r);
         }
     }
-    
+
     println!("{}", config.title);
     println!("{} vulns, {} points", count, score);
     if count != 0 {

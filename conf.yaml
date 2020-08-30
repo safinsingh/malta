@@ -2,7 +2,7 @@ title: Safin's OP Round
 records:
 - message: Removed vulnerability
   identifier: a1b2c3
-  points: 4
+  points: -4
   checks:
   - success:
     - type: FileContains
