@@ -44,3 +44,17 @@ records:
     - success:
         - type: GroupExists
           group: bruh
+- message: safin is an admin
+  identifier: j8j3j5
+  points: 45
+  checks:
+    - success:
+        - type: UserInGroup
+          user: test
+          group: bruh
+- message: fw up
+  identifier: j4k2h6
+  points: 1
+  checks:
+    - success:
+        - type: FirewallUp
