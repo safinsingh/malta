@@ -84,6 +84,7 @@ enum Vuln {
     FileContains(checks::FileContains),
     CommandExitCode(checks::CommandExitCode),
     CommandOutput(checks::CommandOutput),
+    FileExists(checks::FileExists),
 }
 
 macro_rules! gen_evals {
@@ -102,7 +103,8 @@ impl Vuln {
             self,
             Self::FileContains,
             Self::CommandExitCode,
-            Self::CommandOutput
+            Self::CommandOutput,
+            Self::FileExists
         );
     }
 }
@@ -122,7 +124,7 @@ fn main() {
             rep.push(r);
         }
     }
-
+    
     println!("{}", config.title);
     println!("{} vulns, {} points", count, score);
     if count != 0 {

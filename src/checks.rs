@@ -1,8 +1,10 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::path::Path;
 use std::process::Command;
 use std::str;
+use std::process::Stdio;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct FileContains {
@@ -42,7 +44,7 @@ impl CommandExitCode {
         let mut args = self.command.split(' ');
         let cmd = args.next().unwrap();
 
-        let code = Command::new(cmd).args(args).status();
+        let code = Command::new(cmd).args(args).stdout(Stdio::null()).status();
         let err = match code {
             Ok(c) => c,
             Err(_) => return false,
@@ -102,5 +104,16 @@ impl CommandOutput {
         } else {
             return false;
         }
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct FileExists {
+    path: String,
+}
+
+impl FileExists {
+    pub fn query(&self) -> bool {
+        return Path::new(&self.path).exists();
     }
 }
