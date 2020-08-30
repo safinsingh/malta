@@ -1,8 +1,10 @@
 use serde::{Deserialize, Serialize};
 use serde_yaml;
-use std::convert::From;
 use std::fmt;
 use std::fs;
+
+mod checks;
+//use checks::FileContains;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
@@ -76,40 +78,15 @@ struct Check {
 #[serde(tag = "type")]
 #[derive(Debug, Serialize, Deserialize)]
 enum Vuln {
-    FileContains(FileContains),
+    FileContains(checks::FileContains),
 }
 
 impl Vuln {
     fn eval(&self) -> bool {
         match &self {
-            Vuln::FileContains(obj) => return file_contains(obj),
+            Vuln::FileContains(obj) => return checks::file_contains(obj),
         }
     }
-}
-
-impl From<FileContains> for Vuln {
-    fn from(check: FileContains) -> Self {
-        Vuln::FileContains(check)
-    }
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct FileContains {
-    file: String,
-    contains: String,
-}
-
-fn file_contains(obj: &FileContains) -> bool {
-    let content = fs::read_to_string(&obj.file);
-    let content = match content {
-        Ok(s) => s,
-        Err(_) => return false,
-    };
-
-    if content.contains(&obj.contains) {
-        return true;
-    }
-    false
 }
 
 fn main() {
