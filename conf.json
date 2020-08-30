@@ -1,77 +1,17 @@
 {
   "title": "Round title",
-  "vulns": [
+  "records": [
     {
       "message": "bruh",
+      "identifier": "asdttf",
       "points": 4,
       "checks": [
         {
           "success": [
             {
               "type": "FileContains",
-              "arg1": "bruh",
-              "arg2": "bruh2"
-            }
-          ],
-          "fail": [
-            {
-              "type": "FileContains",
-              "arg1": "bruh",
-              "arg2": "bruh2"
-            }
-          ]
-        },
-        {
-          "success": [
-            {
-              "type": "FileContains",
-              "arg1": "bruh",
-              "arg2": "bruh2"
-            }
-          ],
-          "fail": [
-            {
-              "type": "FileContains",
-              "arg1": "bruh",
-              "arg2": "bruh2"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "message": "bruh",
-      "points": 4,
-      "checks": [
-        {
-          "success": [
-            {
-              "type": "FileContains",
-              "arg1": "bruh",
-              "arg2": "bruh2"
-            }
-          ],
-          "fail": [
-            {
-              "type": "FileContains",
-              "arg1": "bruh",
-              "arg2": "bruh2"
-            }
-          ]
-        },
-        {
-          "success": [
-            {
-              "type": "FileContains",
-              "arg1": "bruh",
-              "arg2": "bruh2"
-            }
-          ],
-          "fail": [
-            {
-              "type": "FileContains",
-              "arg1": "bruh",
-              "arg2": "bruh2"
+              "file": "/home/safin/Documents/helios/hi.txt",
+              "contains": "hello"
             }
           ]
         }
