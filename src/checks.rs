@@ -1,6 +1,6 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use users::{get_group_by_name, get_user_by_name};
+use users::{get_group_by_name, get_user_by_name, get_user_groups};
 
 use std::fs;
 use std::path::Path;
@@ -149,5 +149,46 @@ impl GroupExists {
         } else {
             return false;
         }
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct UserInGroup {
+    user: String,
+    group: String,
+}
+
+impl UserInGroup {
+    #[cfg(target_os = "linux")]
+    pub fn query(&self) -> bool {
+        if let Some(id) = get_user_by_name(&self.user) {
+            if let Some(groups) = get_user_groups(&self.user, id.uid()) {
+                for group in groups {
+                    if let Some(name) = group.name().to_str() {
+                        if name == &self.group {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct FirewallUp {}
+
+impl FirewallUp {
+    #[cfg(target_os = "linux")]
+    pub fn query(&self) -> bool {
+        let ufw = CommandOutput {
+            command: "ufw status".into(),
+            contains: "active".into(),
+        };
+        if ufw.query() {
+            return true;
+        }
+        return false;
     }
 }

@@ -15,7 +15,7 @@ struct Config {
 struct Record {
     message: String,
     identifier: String,
-    points: i8,
+    points: i16,
     checks: Vec<Check>,
 }
 
@@ -55,7 +55,7 @@ impl Record {
 struct RepRecord {
     message: String,
     identifier: String,
-    points: i8,
+    points: i16,
 }
 
 impl fmt::Display for RepRecord {
@@ -95,6 +95,8 @@ enum Vuln {
     FileExists(checks::FileExists),
     UserExists(checks::UserExists),
     GroupExists(checks::GroupExists),
+    UserInGroup(checks::UserInGroup),
+    FirewallUp(checks::FirewallUp),
 }
 
 macro_rules! gen_evals {
@@ -116,7 +118,9 @@ impl Vuln {
             Self::CommandOutput,
             Self::FileExists,
             Self::UserExists,
-            Self::GroupExists
+            Self::GroupExists,
+            Self::UserInGroup,
+            Self::FirewallUp
         );
     }
 }
