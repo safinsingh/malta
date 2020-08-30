@@ -1,0 +1,10 @@
+title: Round title
+records:
+- message: bruh
+  identifier: asdttf
+  points: 4
+  checks:
+  - success:
+    - type: FileContains
+      file: "/home/safin/Documents/helios/hi.txt"
+      contains: hello
