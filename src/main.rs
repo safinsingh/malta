@@ -77,6 +77,8 @@ struct Check {
 
 // To add a check type, create a struct and function
 // for it in checks.rs and add it to this enum
+// then, add it to the Vuln impl eval
+// generation macro like so: Self::Struct
 #[serde(tag = "type")]
 #[derive(Debug, Serialize, Deserialize)]
 enum Vuln {
