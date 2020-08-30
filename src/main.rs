@@ -75,17 +75,27 @@ struct Check {
     fail: Option<Vec<Vuln>>,
 }
 
+// To add a check type, create a struct and function
+// for it in checks.rs and add it to this enum
 #[serde(tag = "type")]
 #[derive(Debug, Serialize, Deserialize)]
 enum Vuln {
     FileContains(checks::FileContains),
 }
 
+macro_rules! gen_evals {
+($type:expr,$($variant:path),+) => {
+        match $type {
+            $(
+                $variant(c) => return c.query(),
+            )+
+        }
+    }
+}
+
 impl Vuln {
     fn eval(&self) -> bool {
-        match &self {
-            Vuln::FileContains(obj) => return checks::file_contains(obj),
-        }
+        gen_evals!(self, Self::FileContains);
     }
 }
 
