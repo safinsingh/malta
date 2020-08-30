@@ -57,4 +57,11 @@ records:
   points: 1
   checks:
     - success:
-        - type: FirewallUp
+        - type: Firewall
+- message: sshd up
+  identifier: j4j20g
+  points: 2
+  checks:
+    - success:
+        - type: Service
+          service: sshd

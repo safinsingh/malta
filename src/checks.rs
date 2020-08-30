@@ -177,18 +177,39 @@ impl UserInGroup {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct FirewallUp {}
+pub struct Firewall {}
 
-impl FirewallUp {
+impl Firewall {
     #[cfg(target_os = "linux")]
     pub fn query(&self) -> bool {
         let ufw = CommandOutput {
             command: "ufw status".into(),
-            contains: "active".into(),
+            contains: "inactive".into(),
         };
-        if ufw.query() {
+        if !ufw.query() {
             return true;
         }
         return false;
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Service {
+    service: String,
+}
+
+impl Service {
+    #[cfg(target_os = "linux")]
+    pub fn query(&self) -> bool {
+        let ctl = "systemctl is-active ".to_string() + &self.service;
+        let cmd = CommandOutput {
+            command: ctl.into(),
+            contains: "inactive".into(),
+        };
+        if !cmd.query() {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

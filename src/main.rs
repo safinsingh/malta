@@ -96,7 +96,8 @@ enum Vuln {
     UserExists(checks::UserExists),
     GroupExists(checks::GroupExists),
     UserInGroup(checks::UserInGroup),
-    FirewallUp(checks::FirewallUp),
+    Firewall(checks::Firewall),
+    Service(checks::Service),
 }
 
 macro_rules! gen_evals {
@@ -120,7 +121,8 @@ impl Vuln {
             Self::UserExists,
             Self::GroupExists,
             Self::UserInGroup,
-            Self::FirewallUp
+            Self::Firewall,
+            Self::Service
         );
     }
 }
