@@ -81,6 +81,7 @@ struct Check {
 #[derive(Debug, Serialize, Deserialize)]
 enum Vuln {
     FileContains(checks::FileContains),
+    CommandExitCode(checks::CommandExitCode),
 }
 
 macro_rules! gen_evals {
@@ -95,7 +96,7 @@ macro_rules! gen_evals {
 
 impl Vuln {
     fn eval(&self) -> bool {
-        gen_evals!(self, Self::FileContains);
+        gen_evals!(self, Self::FileContains, Self::CommandExitCode);
     }
 }
 

@@ -8,3 +8,11 @@ records:
     - type: FileContains
       file: "/home/safin/Documents/helios/hi.txt"
       contains: hello
+- message: Super cool vuln
+  identifier: h2b5j2
+  points: 10
+  checks:
+    - success:
+        - type: CommandExitCode
+          command: "ecfffho"
+
