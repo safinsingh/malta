@@ -1,4 +1,6 @@
+use clap::Clap;
 use colored::*;
+use rand::Rng;
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 
@@ -7,6 +9,25 @@ use std::fs;
 
 mod checks;
 mod crypto;
+
+#[derive(Clap)]
+#[clap(version = "0.1", author = "Safin S. <safinsingh.dev@gmail.com>")]
+struct Opts {
+    #[clap(short, long, default_value = "conf.yaml")]
+    config: String,
+
+    #[clap(subcommand)]
+    subcmd: SubCommand,
+}
+
+#[derive(Clap)]
+enum SubCommand {
+    #[clap(version = "0.1", author = "Safin S. <safinsingh.dev@gmail.com>")]
+    Score,
+    Encrypt,
+    Decrypt,
+    GenKey,
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
@@ -135,45 +156,61 @@ impl Vuln {
 }
 
 fn main() {
-    let raw = fs::read_to_string("conf.yaml").expect("There was an error reading the config");
-    crypto::compress(raw);
+    let opts: Opts = Opts::parse();
 
-    let config = crypto::decompress();
-    let config: Config =
-        serde_yaml::from_str(config.as_str()).expect("There was an error deserializing the config");
-
-    let mut rep: Vec<RepRecord> = Vec::new();
-
-    let mut score = 0;
-    let mut count = 0;
-    for rec in config.records.into_iter() {
-        if let Some(r) = rec.score() {
-            score += r.points;
-            count += 1;
-            rep.push(r);
+    match opts.subcmd {
+        SubCommand::Encrypt => {
+            let raw =
+                fs::read_to_string(opts.config).expect("There was an error reading the config");
+            crypto::compress(raw);
         }
-    }
+        SubCommand::Decrypt => {
+            let config = crypto::decompress();
+            println!("{}", config);
+        }
+        SubCommand::GenKey => {
+            let random_bytes = rand::thread_rng().gen::<[u8; 32]>();
+            println!("{:?}", random_bytes);
+        }
+        SubCommand::Score => {
+            let config = crypto::decompress();
+            let config: Config = serde_yaml::from_str(config.as_str())
+                .expect("There was an error deserializing the config");
 
-    println!("{}", format!("[ -- {} -- ]", config.title).blue().bold());
-    println!(
-        "You have: {}",
-        format!(
-            "{} vulns, {} points\n",
-            format!("{}", count).green().bold(),
-            format!("{}", score).green().bold()
-        )
-    );
-    if count != 0 {
-        println!("{}", format!("[ -- {} -- ]", "VULNS").green().bold());
-        for rec in rep.iter() {
-            if &rec.points > &0 {
-                println!("{}", &rec);
+            let mut rep: Vec<RepRecord> = Vec::new();
+
+            let mut score = 0;
+            let mut count = 0;
+            for rec in config.records.into_iter() {
+                if let Some(r) = rec.score() {
+                    score += r.points;
+                    count += 1;
+                    rep.push(r);
+                }
             }
-        }
-        println!("{}", format!("\n[ -- {} -- ]", "PENALTIES").red().bold());
-        for rec in rep.into_iter() {
-            if rec.points < 0 {
-                println!("{}", rec);
+
+            println!("{}", format!("[ -- {} -- ]", config.title).blue().bold());
+            println!(
+                "You have: {}",
+                format!(
+                    "{} vulns, {} points\n",
+                    format!("{}", count).green().bold(),
+                    format!("{}", score).green().bold()
+                )
+            );
+            if count != 0 {
+                println!("{}", format!("[ -- {} -- ]", "VULNS").green().bold());
+                for rec in rep.iter() {
+                    if &rec.points > &0 {
+                        println!("{}", &rec);
+                    }
+                }
+                println!("{}", format!("\n[ -- {} -- ]", "PENALTIES").red().bold());
+                for rec in rep.into_iter() {
+                    if rec.points < 0 {
+                        println!("{}", rec);
+                    }
+                }
             }
         }
     }
