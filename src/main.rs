@@ -6,6 +6,7 @@ use std::fmt;
 use std::fs;
 
 mod checks;
+mod crypto;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
@@ -134,9 +135,13 @@ impl Vuln {
 }
 
 fn main() {
-    let config = fs::read_to_string("conf.yaml").expect("There was an error reading the config");
+    let raw = fs::read_to_string("conf.yaml").expect("There was an error reading the config");
+    crypto::compress(raw);
+
+    let config = crypto::decompress();
     let config: Config =
         serde_yaml::from_str(config.as_str()).expect("There was an error deserializing the config");
+
     let mut rep: Vec<RepRecord> = Vec::new();
 
     let mut score = 0;
