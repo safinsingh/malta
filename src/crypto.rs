@@ -11,7 +11,7 @@ pub fn compress(config: String) {
     if let Ok(_) = e.write_all(config.as_bytes()) {
         if let Ok(b) = e.finish() {
             if let Ok(mut f) = File::create("conf.z") {
-                if let Err(_) = f.write_all(&b) {
+                if let Err(_) = f.write_all(&crypt(b)) {
                     panic!("Failed to write compressed bytes to file!");
                 }
             }
@@ -25,7 +25,8 @@ pub fn compress(config: String) {
 
 pub fn decompress() -> String {
     if let Ok(conf) = fs::read("conf.z") {
-        let mut d = ZlibDecoder::new(conf.as_slice());
+        let dec = crypt(conf);
+        let mut d = ZlibDecoder::new(dec.as_slice());
         let mut s = String::new();
 
         if let Ok(_) = d.read_to_string(&mut s) {
@@ -38,4 +39,19 @@ pub fn decompress() -> String {
     } else {
         panic!("Failed to read compressed data!");
     }
+}
+
+fn crypt(input: Vec<u8>) -> Vec<u8> {
+    let key: Vec<u8> = vec![
+        9, 112, 230, 49, 125, 19, 205, 183, 213, 237, 183, 183, 150, 165, 39, 243, 254, 101, 90,
+        157, 228, 136, 252, 124, 243, 9, 28, 155, 57, 96, 231, 187,
+    ];
+
+    let out: Vec<u8> = input
+        .iter()
+        .zip(key.iter().cycle())
+        .map(|(&x2, &x1)| x1 ^ x2)
+        .collect();
+
+    out
 }
