@@ -1,5 +1,7 @@
+use colored::*;
 use serde::{Deserialize, Serialize};
 use serde_yaml;
+
 use std::fmt;
 use std::fs;
 
@@ -64,13 +66,17 @@ impl fmt::Display for RepRecord {
             write!(
                 f,
                 "{} ({}) - {} points",
-                self.message, self.identifier, self.points
+                self.message,
+                self.identifier,
+                format!("{}", self.points).green().bold()
             )
         } else {
             write!(
                 f,
-                "[PENALTY] {} ({}) - {} points",
-                self.message, self.identifier, self.points
+                "{} ({}) - {} points",
+                self.message,
+                self.identifier,
+                format!("{}", -1 * self.points).red().bold()
             )
         }
     }
@@ -143,11 +149,27 @@ fn main() {
         }
     }
 
-    println!("{}", config.title);
-    println!("{} vulns, {} points", count, score);
+    println!("{}", format!("[ -- {} -- ]", config.title).blue().bold());
+    println!(
+        "You have: {}",
+        format!(
+            "{} vulns, {} points\n",
+            format!("{}", count).green().bold(),
+            format!("{}", score).green().bold()
+        )
+    );
     if count != 0 {
+        println!("{}", format!("[ -- {} -- ]", "VULNS").green().bold());
+        for rec in rep.iter() {
+            if &rec.points > &0 {
+                println!("{}", &rec);
+            }
+        }
+        println!("{}", format!("\n[ -- {} -- ]", "PENALTIES").red().bold());
         for rec in rep.into_iter() {
-            println!("{}", rec);
+            if rec.points < 0 {
+                println!("{}", rec);
+            }
         }
     }
 }
