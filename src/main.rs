@@ -169,8 +169,10 @@ fn main() {
             println!("{}", config);
         }
         SubCommand::GenKey => {
-            let random_bytes = rand::thread_rng().gen::<[u8; 32]>();
-            println!("{:?}", random_bytes);
+            let key1 = rand::thread_rng().gen::<[u8; 32]>();
+            let key2 = rand::thread_rng().gen::<[u8; 32]>();
+            println!("let key1: Vec<u8> = vec!{:?};", key1);
+            println!("let key2: Vec<u8> = vec!{:?};", key2);
         }
         SubCommand::Score => {
             let config = crypto::decompress();
