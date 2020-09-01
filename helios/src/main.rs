@@ -4,6 +4,7 @@ use rand::Rng;
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 
+use std::collections::HashMap;
 use std::fmt;
 use std::fs;
 
@@ -25,13 +26,13 @@ enum SubCommand {
     #[clap(version = "0.1", author = "Safin S. <safinsingh.dev@gmail.com>")]
     Score,
     Encrypt,
-    Decrypt,
     GenKey,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Config {
     title: String,
+    remote: String,
     records: Vec<Record>,
 }
 
@@ -117,15 +118,15 @@ struct Check {
 #[serde(tag = "type")]
 #[derive(Debug, Serialize, Deserialize)]
 enum Vuln {
-    FileContains(checks::FileContains),
-    CommandExitCode(checks::CommandExitCode),
-    CommandOutput(checks::CommandOutput),
-    FileExists(checks::FileExists),
-    UserExists(checks::UserExists),
-    GroupExists(checks::GroupExists),
-    UserInGroup(checks::UserInGroup),
-    Firewall(checks::Firewall),
-    Service(checks::Service),
+    FileContains(crate::checks::FileContains),
+    CommandExitCode(crate::checks::CommandExitCode),
+    CommandOutput(crate::checks::CommandOutput),
+    FileExists(crate::checks::FileExists),
+    UserExists(crate::checks::UserExists),
+    GroupExists(crate::checks::GroupExists),
+    UserInGroup(crate::checks::UserInGroup),
+    Firewall(crate::checks::Firewall),
+    Service(crate::checks::Service),
 }
 
 macro_rules! gen_evals {
@@ -164,10 +165,6 @@ fn main() {
                 fs::read_to_string(opts.config).expect("There was an error reading the config");
             crypto::compress(raw);
         }
-        SubCommand::Decrypt => {
-            let config = crypto::decompress();
-            println!("{}", config);
-        }
         SubCommand::GenKey => {
             let key1 = rand::thread_rng().gen::<[u8; 32]>();
             let key2 = rand::thread_rng().gen::<[u8; 32]>();
@@ -180,6 +177,7 @@ fn main() {
                 .expect("There was an error deserializing the config");
 
             let mut rep: Vec<RepRecord> = Vec::new();
+            let mut req = String::new();
 
             let mut score = 0;
             let mut count = 0;
@@ -187,6 +185,7 @@ fn main() {
                 if let Some(r) = rec.score() {
                     score += r.points;
                     count += 1;
+                    req.push_str(&r.identifier);
                     rep.push(r);
                 }
             }
@@ -200,6 +199,7 @@ fn main() {
                     format!("{}", score).green().bold()
                 )
             );
+
             if count != 0 {
                 println!("{}", format!("[ -- {} -- ]", "VULNS").green().bold());
                 for rec in rep.iter() {
@@ -213,6 +213,16 @@ fn main() {
                         println!("{}", rec);
                     }
                 }
+            }
+            let vulnstr = format!("{}", score);
+            let mut params: HashMap<&str, &str> = HashMap::new();
+            params.insert("id", "safin");
+            params.insert("vulnstr", &req);
+            params.insert("points", &vulnstr);
+
+            let client = reqwest::blocking::Client::new();
+            if let Err(e) = client.post(&config.remote).json(&params).send() {
+                println!("{}", e);
             }
         }
     }

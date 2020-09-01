@@ -1,2 +1,2 @@
 default:
-				cargo build && clear && sudo ./target/debug/helios
+	cargo build && clear && sudo ./target/debug/helios
