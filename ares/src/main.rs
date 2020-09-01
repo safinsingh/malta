@@ -47,10 +47,10 @@ fn vuln_post(req: Json<Req>) {
         .collect::<Vec<_>>();
     let mut ret = String::new();
     for v in vuln_arr.into_iter() {
-        ret.push_str(&format!("{}", vulns.get(v).unwrap()));
+        ret.push_str(&format!("{}\n", vulns.get(v).unwrap()));
     }
 
-    println!("ID: {}\nPoints: {}\nVulns: {}", req.id, req.points, ret);
+    println!("ID: {}\nPoints: {}\nVulns:\n{}", req.id, req.points, ret);
 }
 
 fn main() {
