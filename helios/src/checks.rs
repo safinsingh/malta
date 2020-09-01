@@ -16,20 +16,12 @@ pub struct FileContains {
 
 impl FileContains {
     pub fn query(&self) -> bool {
-        let content = fs::read_to_string(&self.file);
-        let content = match content {
-            Ok(s) => s,
-            Err(_) => return false,
-        };
-
-        let re = Regex::new(&self.contains);
-        let re = match re {
-            Ok(r) => r,
-            Err(_) => return false,
-        };
-
-        if re.is_match(&content) {
-            return true;
+        if let Ok(c) = fs::read_to_string(&self.file) {
+            if let Ok(re) = Regex::new(&self.contains) {
+                if re.is_match(&c) {
+                    return true;
+                }
+            }
         }
         false
     }
@@ -46,30 +38,20 @@ impl CommandExitCode {
         let mut args = self.command.split(' ');
         let cmd = args.next().unwrap();
 
-        let code = Command::new(cmd).args(args).stdout(Stdio::null()).status();
-        let err = match code {
-            Ok(c) => c,
-            Err(_) => return false,
-        };
-
-        match err.code() {
-            Some(e) => {
+        if let Ok(code) = Command::new(cmd).args(args).stdout(Stdio::null()).status() {
+            if let Some(e) = code.code() {
                 if let Some(c) = self.code {
                     if e == c {
                         return true;
-                    } else {
-                        return false;
                     }
                 } else {
                     if e == 0 {
                         return true;
-                    } else {
-                        return false;
                     }
                 }
             }
-            None => return false,
         }
+        false
     }
 }
 
@@ -84,28 +66,16 @@ impl CommandOutput {
         let mut args = self.command.split(' ');
         let cmd = args.next().unwrap();
 
-        let out = Command::new(cmd).args(args).output();
-        let out = match out {
-            Ok(o) => o,
-            Err(_) => return false,
-        };
-
-        let re = Regex::new(&self.contains);
-        let re = match re {
-            Ok(r) => r,
-            Err(_) => return false,
-        };
-
-        let stdout = str::from_utf8(&out.stdout);
-        if let Ok(s) = stdout {
-            if re.is_match(s) {
-                return true;
-            } else {
-                return false;
+        if let Ok(out) = Command::new(cmd).args(args).output() {
+            if let Ok(re) = Regex::new(&self.contains) {
+                if let Ok(s) = str::from_utf8(&out.stdout) {
+                    if re.is_match(s) {
+                        return true;
+                    }
+                }
             }
-        } else {
-            return false;
         }
+        false
     }
 }
 
@@ -130,9 +100,8 @@ impl UserExists {
     pub fn query(&self) -> bool {
         if let Some(_) = get_user_by_name(&self.user) {
             return true;
-        } else {
-            return false;
         }
+        false
     }
 }
 
@@ -146,9 +115,8 @@ impl GroupExists {
     pub fn query(&self) -> bool {
         if let Some(_) = get_group_by_name(&self.group) {
             return true;
-        } else {
-            return false;
         }
+        false
     }
 }
 
@@ -172,7 +140,7 @@ impl UserInGroup {
                 }
             }
         }
-        return false;
+        false
     }
 }
 
@@ -189,7 +157,7 @@ impl Firewall {
         if !ufw.query() {
             return true;
         }
-        return false;
+        false
     }
 }
 
@@ -208,8 +176,7 @@ impl Service {
         };
         if !cmd.query() {
             return true;
-        } else {
-            return false;
         }
+        false
     }
 }
