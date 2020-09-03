@@ -46,8 +46,7 @@ fn vuln_post(req: Json<Req>) {
         .vulnstr
         .as_bytes()
         .chunks(6)
-        .map(|s| unsafe { ::std::str::from_utf8_unchecked(s) })
-        .collect::<Vec<_>>();
+        .map(|s| unsafe { ::std::str::from_utf8_unchecked(s) });
 
     let mut ret: Vec<String> = Vec::new();
     for v in vuln_arr.into_iter() {

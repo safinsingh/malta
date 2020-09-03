@@ -44,10 +44,8 @@ impl CommandExitCode {
                     if e == c {
                         return true;
                     }
-                } else {
-                    if e == 0 {
-                        return true;
-                    }
+                } else if e == 0 {
+                    return true;
                 }
             }
         }
@@ -86,7 +84,7 @@ pub struct FileExists {
 
 impl FileExists {
     pub fn query(&self) -> bool {
-        return Path::new(&self.path).exists();
+        Path::new(&self.path).exists()
     }
 }
 
@@ -98,7 +96,7 @@ pub struct UserExists {
 impl UserExists {
     #[cfg(target_os = "linux")]
     pub fn query(&self) -> bool {
-        if let Some(_) = get_user_by_name(&self.user) {
+        if get_user_by_name(&self.user).is_some() {
             return true;
         }
         false
@@ -113,7 +111,7 @@ pub struct GroupExists {
 impl GroupExists {
     #[cfg(target_os = "linux")]
     pub fn query(&self) -> bool {
-        if let Some(_) = get_group_by_name(&self.group) {
+        if get_group_by_name(&self.group).is_some() {
             return true;
         }
         false
@@ -133,7 +131,7 @@ impl UserInGroup {
             if let Some(groups) = get_user_groups(&self.user, id.uid()) {
                 for group in groups {
                     if let Some(name) = group.name().to_str() {
-                        if name == &self.group {
+                        if name == self.group {
                             return true;
                         }
                     }
@@ -171,7 +169,7 @@ impl Service {
     pub fn query(&self) -> bool {
         let ctl = "systemctl is-active ".to_string() + &self.service;
         let cmd = CommandOutput {
-            command: ctl.into(),
+            command: ctl,
             contains: "inactive".into(),
         };
         if !cmd.query() {
