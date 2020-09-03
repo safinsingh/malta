@@ -2,7 +2,6 @@ use clap::Clap;
 use colored::*;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
-use serde_yaml;
 
 use std::collections::HashMap;
 use std::fmt;
@@ -52,14 +51,14 @@ impl Record {
         let mut got = true;
         for check in &self.checks {
             if let Some(s) = &check.success {
-                for cond in s.into_iter() {
+                for cond in s.iter() {
                     if !cond.eval() {
                         got = false;
                     }
                 }
             }
             if let Some(f) = &check.fail {
-                for cond in f.into_iter() {
+                for cond in f.iter() {
                     if cond.eval() {
                         got = false;
                     }
@@ -70,7 +69,7 @@ impl Record {
             return Some(RepRecord {
                 message: self.message.clone(),
                 identifier: self.identifier.clone(),
-                points: self.points.clone(),
+                points: self.points,
             });
         }
         None
@@ -99,7 +98,7 @@ impl fmt::Display for RepRecord {
                 "{} ({}) - {} points",
                 self.message,
                 self.identifier,
-                format!("{}", -1 * self.points).red().bold()
+                format!("{}", -self.points).red().bold()
             )
         }
     }
@@ -203,7 +202,7 @@ fn main() {
             if count != 0 {
                 println!("{}", format!("[ -- {} -- ]", "VULNS").green().bold());
                 for rec in rep.iter() {
-                    if &rec.points > &0 {
+                    if rec.points > 0 {
                         println!("{}", &rec);
                     }
                 }

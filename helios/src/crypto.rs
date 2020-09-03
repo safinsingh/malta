@@ -8,10 +8,10 @@ use std::io::prelude::*;
 
 pub fn compress(config: String) {
     let mut e = ZlibEncoder::new(Vec::new(), Compression::default());
-    if let Ok(_) = e.write_all(config.as_bytes()) {
+    if e.write_all(config.as_bytes()).is_ok() {
         if let Ok(b) = e.finish() {
             if let Ok(mut f) = File::create("conf.z") {
-                if let Err(_) = f.write_all(&crypt(b)) {
+                if f.write_all(&crypt(b)).is_err() {
                     panic!("Failed to write compressed bytes to file!");
                 }
             }
@@ -29,8 +29,8 @@ pub fn decompress() -> String {
         let mut d = ZlibDecoder::new(dec.as_slice());
         let mut s = String::new();
 
-        if let Ok(_) = d.read_to_string(&mut s) {
-            format!("{}", s)
+        if d.read_to_string(&mut s).is_ok() {
+            s
         } else {
             panic!(
                 "Failed to read zlib decompressed data to string! Your config is likely corrupted!"
