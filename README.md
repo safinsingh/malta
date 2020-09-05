@@ -1,9 +1,8 @@
 <p align="center">
-  <img src="./assets/logo.png" />
+  <img src="./assets/logo.png" width="40%" />
 </p>
 
-# <p align="center">
-
+<p align="center">
   <img alt="Version" src="https://img.shields.io/badge/Version-1.0-red.svg" />
   <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-orange.svg" />
   <img alt="Made with Go" src="https://img.shields.io/badge/Made%20with-Rust-yellow.svg" />
