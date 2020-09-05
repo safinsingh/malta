@@ -2,8 +2,8 @@ use clap::Clap;
 use colored::*;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 
-use std::collections::HashMap;
 use std::fmt;
 use std::fs;
 
@@ -213,15 +213,20 @@ fn main() {
                     }
                 }
             }
-            let vulnstr = format!("{}", score);
-            let mut params: HashMap<&str, &str> = HashMap::new();
-            params.insert("id", "safin");
-            params.insert("vulnstr", &req);
-            params.insert("points", &vulnstr);
 
-            let client = reqwest::blocking::Client::new();
-            if let Err(e) = client.post(&config.remote).json(&params).send() {
-                println!("{}", e);
+            if let Ok(id) = fs::read_to_string("TeamID") {
+                let client = reqwest::blocking::Client::new();
+                let params = json!({
+                    "id": id,
+                    "vulnstr": req,
+                    "points": score.to_string()
+                });
+
+                if let Err(e) = client.post(&config.remote).json(&params).send() {
+                    println!("{}", e);
+                }
+            } else {
+                panic!("Failed to read TeamID, didn't send scoring data to remote endpoint");
             }
         }
     }

@@ -9,11 +9,11 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 mod crypto;
-mod frontend;
 
 #[derive(Serialize, Deserialize)]
 struct Config {
     title: String,
+    db: String,
     records: Vec<Record>,
 }
 
@@ -55,7 +55,7 @@ fn vuln_post(req: Json<Req>) {
         }
     }
 
-    let firebase = Firebase::new("https://malta-rs.firebaseio.com").unwrap();
+    let firebase = Firebase::new(&config.db).unwrap();
     let loc = firebase.at(&req.id).unwrap();
     let time = Local::now().timestamp();
 
@@ -65,11 +65,9 @@ fn vuln_post(req: Json<Req>) {
     ))
     .unwrap();
 
-    println!("ID: {}\nPoints: {}\nVulns:\n{:?}", req.id, req.points, ret);
+    println!("ID: {}Points: {}\nVulns: {:?}", req.id, req.points, ret);
 }
 
 fn main() {
-    rocket::ignite()
-        .mount("/", routes![vuln_post, frontend::front])
-        .launch();
+    rocket::ignite().mount("/", routes![vuln_post]).launch();
 }
