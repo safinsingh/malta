@@ -1,68 +1,69 @@
 title: Safin's OP Round
 remote: "http://localhost:8000/"
+db: "https://malta-rs.firebaseio.com"
 records:
-  - message: Removed vulnerability
-    identifier: a1b2c3
-    points: -4
-    checks:
-      - success:
-          - type: FileContains
-            file: "/home/safin/Documents/helios/hi.txt"
-            contains: "^hello"
-  - message: Super cool vuln
-    identifier: h2b5j2
-    points: 10
-    checks:
-      - success:
-          - type: CommandExitCode
-            command: "echo hfhsadkfji"
-  - message: Bruh is present
-    identifier: j4g9g3
-    points: 32
-    checks:
-      - success:
-          - type: CommandOutput
-            command: "echo hello world"
-            contains: "^hello"
-  - message: passwd exists
-    identifier: j4k20v
-    points: 49
-    checks:
-      - success:
-          - type: FileExists
-            path: /etc/passwd
-  - message: safin exists
-    identifier: j53bt3
-    points: 2
-    checks:
-      - success:
-          - type: UserExists
-            user: test
-  - message: bruh exists
-    identifier: br4kf3
-    points: 2
-    checks:
-      - success:
-          - type: GroupExists
-            group: bruh
-  - message: safin is an admin
-    identifier: j8j3j5
-    points: 45
-    checks:
-      - success:
-          - type: UserInGroup
-            user: test
-            group: bruh
-  - message: fw up
-    identifier: j4k2h6
-    points: 1
-    checks:
-      - success:
-          - type: Firewall
-  - message: sshd up
-    identifier: j4j20g
-    points: 2
-    checks:
-      - success:
-          - type: Service
-            service: sshd
+    - message: Removed vulnerability
+      identifier: a1b2c3
+      points: -4
+      checks:
+          - success:
+                - type: FileContains
+                  file: "/home/safin/Documents/helios/hi.txt"
+                  contains: "^hello"
+    - message: Super cool vuln
+      identifier: h2b5j2
+      points: 10
+      checks:
+          - success:
+                - type: CommandExitCode
+                  command: "echo hfhsadkfji"
+    - message: Bruh is present
+      identifier: j4g9g3
+      points: 32
+      checks:
+          - success:
+                - type: CommandOutput
+                  command: "echo hello world"
+                  contains: "^hello"
+    - message: passwd exists
+      identifier: j4k20v
+      points: 49
+      checks:
+          - success:
+                - type: FileExists
+                  path: /etc/passwd
+    - message: safin exists
+      identifier: j53bt3
+      points: 2
+      checks:
+          - success:
+                - type: UserExists
+                  user: test
+    - message: bruh exists
+      identifier: br4kf3
+      points: 2
+      checks:
+          - success:
+                - type: GroupExists
+                  group: bruh
+    - message: safin is an admin
+      identifier: j8j3j5
+      points: 45
+      checks:
+          - success:
+                - type: UserInGroup
+                  user: test
+                  group: bruh
+    - message: fw up
+      identifier: j4k2h6
+      points: 1
+      checks:
+          - success:
+                - type: Firewall
+    - message: sshd up
+      identifier: j4j20g
+      points: 2
+      checks:
+          - success:
+                - type: Service
+                  service: sshd
