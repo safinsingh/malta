@@ -33,6 +33,8 @@ make release
 - Once built, you can run `helios encrypt` to encrypt your configuration. You can now safely delete your `config.yaml` and place the encrypted `conf.z` on both your server and client.
 - Now, start `ares` and distribute the scoring engine. Typically, this is done via the distribution of an insecure virtual machine with vulnerabilities preloaded.
 
+> If you allow your Firebase connection to be unauthenticated, make sure to set security rules to only allow the IP of your remote server running `ares`
+
 ## 📖 Checks
 
 The check schema for helios looks like the following:
