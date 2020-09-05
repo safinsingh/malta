@@ -2,3 +2,5 @@ helios/target
 ares/target
 *.z
 dist/
+ares
+helios
