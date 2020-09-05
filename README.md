@@ -5,7 +5,7 @@
 <p align="center">
   <img alt="Version" src="https://img.shields.io/badge/Version-1.0-red.svg" />
   <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-orange.svg" />
-  <img alt="Made with Go" src="https://img.shields.io/badge/Made%20with-Rust-yellow.svg" />
+  <img alt="Made with Rust" src="https://img.shields.io/badge/Made%20with-Rust-yellow.svg" />
   <img alt="gh-actions" src="https://github.com/safinsingh/malta/workflows/Rust/badge.svg" />
   <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-Welcome-blue.svg">
   <img alt="awesome" src="https://img.shields.io/badge/Awesome-Yes-purple">
