@@ -1,4 +1,4 @@
-name: Rust
+name: CI
 
 on:
   push:
@@ -14,8 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: rustup default nightly
+        
+      - name: Set default rust channel to nightly
+        run: rustup default nightly
+        
       - name: Build Helios
         run: cd helios && cargo build --verbose
+        
       - name: Build Ares
         run: cd ares && cargo build --verbose
