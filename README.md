@@ -74,7 +74,7 @@ records:
             contains: "^hello"
 ```
 
-`helios` currently supports many checks for both Windows and Unix:
+`helios` currently supports many checks for both Windows and Unix-like operating systems:
 
 ```rust
 // Score a file containing a regular expression.
@@ -112,7 +112,7 @@ pub struct FileExists {
 
 ```rust
 // Score a user existing on the system.
-// Currently only supports Unix systems.
+// Currently only supports Unix-like operating systems.
 pub struct UserExists {
     user: String,
 }
@@ -120,7 +120,7 @@ pub struct UserExists {
 
 ```rust
 // Score a group existing on the system.
-// Currently only supports Unix systems.
+// Currently only supports Unix-like operating systems.
 pub struct GroupExists {
     group: String,
 }
@@ -128,7 +128,7 @@ pub struct GroupExists {
 
 ```rust
 // Score a user existing in a group.
-// Currently only supports Unix systems.
+// Currently only supports Unix-like operating systems.
 pub struct UserInGroup {
     user: String,
     group: String,
@@ -137,13 +137,13 @@ pub struct UserInGroup {
 
 ```rust
 // Score the firewall status.
-// Currently only supports Unix systems.
+// Currently only supports Unix-like operating systems.
 pub struct Firewall {}
 ```
 
 ```rust
 // Score a systemd service being active.
-// Currently only supports Unix systems.
+// Currently only supports Unix-like operating systems.
 pub struct Service {
     service: String,
 }
