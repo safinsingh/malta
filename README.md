@@ -34,6 +34,120 @@ make release
 - Once built, you can run `helios encrypt` to encrypt your configuration. You can now safely delete your `config.yaml` and place the encrypted `conf.z` on both your server and client.
 - Now, start `ares` and distribute the scoring engine. Typically, this is done via the distribution of an insecure virtual machine with vulnerabilities preloaded.
 
+## 📖 Checks
+
+The check schema for helios looks like the following:
+
+```yaml
+# Global constants
+title: "Safin's OP Round"
+remote: "http://localhost:8000/"
+db: "https://malta-rs.firebaseio.com"
+
+# Array of vulnerability records
+records:
+  # All vulnerabilities must have
+  # a message, identifier, and points.
+  # If the points are negative, it's
+  # counted as a penalty
+  - message: Removed vulnerability
+    identifier: a1b2c3
+    points: -4
+
+    # Array of all checks
+    checks:
+      # Array of REQUIRED sucessful checks,
+      # the following MUST be TRUE for the
+      # check to pass
+      - success:
+          - type: FileContains
+            file: "/home/safin/Documents/helios/hi.txt"
+            contains: "^hello"
+
+      # Array of REQUIRED sucessful checks,
+      # the following MUST be FALSE for the
+      # check to pass
+      - fail:
+          - type: FileContains
+            file: "/home/safin/Documents/helios/hi2.txt"
+            contains: "^hello"
+```
+
+`helios` currently supports many checks for both Windows and Unix:
+
+```rust
+// Score a file containing a regular expression.
+pub struct FileContains {
+    file: String,
+    contains: String,
+}
+```
+
+```rust
+// Score a command exiting with a certain
+// exit code. If a custom code is not specified,
+// it defaults to 0.
+pub struct CommandExitCode {
+    command: String,
+    code: Option<i32>,
+}
+```
+
+```rust
+// Score a command's STDOUT matching a
+// regular expression.
+pub struct CommandOutput {
+    command: String,
+    contains: String,
+}
+```
+
+```rust
+// Score a file that exists on the system.
+pub struct FileExists {
+    path: String,
+}
+```
+
+```rust
+// Score a user existing on the system.
+// Currently only supports Unix systems.
+pub struct UserExists {
+    user: String,
+}
+```
+
+```rust
+// Score a group existing on the system.
+// Currently only supports Unix systems.
+pub struct GroupExists {
+    group: String,
+}
+```
+
+```rust
+// Score a user existing in a group.
+// Currently only supports Unix systems.
+pub struct UserInGroup {
+    user: String,
+    group: String,
+}
+```
+
+```rust
+// Score the firewall status.
+// Currently only supports Unix systems.
+pub struct Firewall {}
+```
+
+```rust
+// Score a systemd service being active.
+// Currently only supports Unix systems.
+pub struct Service {
+    service: String,
+}
+```
+
 ## 👨‍💻 Author
 
 Linkedin: [Safin Singh](https://www.linkedin.com/in/safin-singh-b2630918a/) <br>
