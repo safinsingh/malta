@@ -14,7 +14,7 @@
 
 <hr>
 
-## ✨ Binaries
+## ✨ Installation
 
 ```sh
 git clone https://github.com/safinsingh/malta.git
