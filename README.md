@@ -1,15 +1,15 @@
 <p align="center">
-  <img src="./assets/logo.png" width="40%" />
+	<img src="./assets/logo.png" width="40%" />
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/Version-1.0-red.svg" />
-  <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-orange.svg" />
-  <img alt="Made with Rust" src="https://img.shields.io/badge/Made%20with-Rust-yellow.svg" />
-  <img alt="gh-actions" src="https://github.com/safinsingh/malta/workflows/CI/badge.svg" />
-  <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-Welcome-blue.svg">
-  <img alt="awesome" src="https://img.shields.io/badge/Awesome-Yes-purple">
-  <br />
+	<img alt="Version" src="https://img.shields.io/badge/Version-1.0-red.svg" />
+	<img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-orange.svg" />
+	<img alt="Made with Rust" src="https://img.shields.io/badge/Made%20with-Rust-yellow.svg" />
+	<img alt="gh-actions" src="https://github.com/safinsingh/malta/workflows/CI/badge.svg" />
+	<img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-Welcome-blue.svg">
+	<img alt="awesome" src="https://img.shields.io/badge/Awesome-Yes-purple">
+	<br />
 </p>
 
 <hr>
@@ -47,31 +47,31 @@ db: "https://malta-rs.firebaseio.com"
 
 # Array of vulnerability records
 records:
-  # All vulnerabilities must have
-  # a message, identifier, and points.
-  # If the points are negative, it's
-  # counted as a penalty
-  - message: Removed vulnerability
-    identifier: a1b2c3
-    points: -4
+	# All vulnerabilities must have
+	# a message, identifier, and points.
+	# If the points are negative, it's
+	# counted as a penalty
+	- message: Removed vulnerability
+		identifier: a1b2c3
+		points: -4
 
-    # Array of all checks
-    checks:
-      # Array of REQUIRED sucessful checks,
-      # the following MUST be TRUE for the
-      # check to pass
-      - success:
-          - type: FileContains
-            file: "/home/safin/Documents/helios/hi.txt"
-            contains: "^hello"
+		# Array of all checks
+		checks:
+			# Array of REQUIRED sucessful checks,
+			# the following MUST be TRUE for the
+			# check to pass
+			- success:
+					- type: FileContains
+						file: "/home/safin/Documents/helios/hi.txt"
+						contains: "^hello"
 
-      # Array of REQUIRED sucessful checks,
-      # the following MUST be FALSE for the
-      # check to pass
-      - fail:
-          - type: FileContains
-            file: "/home/safin/Documents/helios/hi2.txt"
-            contains: "^hello"
+			# Array of REQUIRED sucessful checks,
+			# the following MUST be FALSE for the
+			# check to pass
+			- fail:
+					- type: FileContains
+						file: "/home/safin/Documents/helios/hi2.txt"
+						contains: "^hello"
 ```
 
 `helios` currently supports many checks for both Windows and Unix-like operating systems:
@@ -79,8 +79,8 @@ records:
 ```rust
 // Score a file containing a regular expression.
 pub struct FileContains {
-    file: String,
-    contains: String,
+		file: String,
+		contains: String,
 }
 ```
 
@@ -89,8 +89,8 @@ pub struct FileContains {
 // exit code. If a custom code is not specified,
 // it defaults to 0.
 pub struct CommandExitCode {
-    command: String,
-    code: Option<i32>,
+		command: String,
+		code: Option<i32>,
 }
 ```
 
@@ -98,15 +98,15 @@ pub struct CommandExitCode {
 // Score a command's STDOUT matching a
 // regular expression.
 pub struct CommandOutput {
-    command: String,
-    contains: String,
+		command: String,
+		contains: String,
 }
 ```
 
 ```rust
 // Score a file that exists on the system.
 pub struct FileExists {
-    path: String,
+		path: String,
 }
 ```
 
@@ -114,7 +114,7 @@ pub struct FileExists {
 // Score a user existing on the system.
 // Currently only supports Unix-like operating systems.
 pub struct UserExists {
-    user: String,
+		user: String,
 }
 ```
 
@@ -122,7 +122,7 @@ pub struct UserExists {
 // Score a group existing on the system.
 // Currently only supports Unix-like operating systems.
 pub struct GroupExists {
-    group: String,
+		group: String,
 }
 ```
 
@@ -130,8 +130,8 @@ pub struct GroupExists {
 // Score a user existing in a group.
 // Currently only supports Unix-like operating systems.
 pub struct UserInGroup {
-    user: String,
-    group: String,
+		user: String,
+		group: String,
 }
 ```
 
@@ -145,7 +145,7 @@ pub struct Firewall {}
 // Score a systemd service being active.
 // Currently only supports Unix-like operating systems.
 pub struct Service {
-    service: String,
+		service: String,
 }
 ```
 

@@ -15,4 +15,3 @@ release:
 	cd ../ares && \
 	cargo build --release && \
 	cp target/release/ares ../dist/ares
-

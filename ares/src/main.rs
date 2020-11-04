@@ -12,62 +12,60 @@ mod crypto;
 
 #[derive(Serialize, Deserialize)]
 struct Config {
-    title: String,
-    db: String,
-    records: Vec<Record>,
+	title: String,
+	db: String,
+	records: Vec<Record>,
 }
 
 #[derive(Serialize, Deserialize)]
 struct Record {
-    message: String,
-    identifier: String,
-    points: i16,
+	message: String,
+	identifier: String,
+	points: i16,
 }
 
 #[derive(Serialize, Deserialize)]
 struct Req {
-    id: String,
-    vulnstr: String,
-    points: String,
+	id: String,
+	vulnstr: String,
+	points: String,
 }
 
 #[post("/", format = "json", data = "<req>")]
 fn vuln_post(req: Json<Req>) {
-    let mut vulns = HashMap::new();
-    let config = crypto::decompress();
-    let config: Config = serde_yaml::from_str(config.as_str())
-        .expect("There was an error deserializing the config!");
+	let mut vulns = HashMap::new();
+	let config = crypto::decompress();
+	let config: Config = serde_yaml::from_str(config.as_str())
+		.expect("There was an error deserializing the config!");
 
-    for rec in config.records.into_iter() {
-        vulns.insert(rec.identifier, rec.message);
-    }
+	for rec in config.records.into_iter() {
+		vulns.insert(rec.identifier, rec.message);
+	}
 
-    let vuln_arr = req
-        .vulnstr
-        .as_bytes()
-        .chunks(6)
-        .map(|s| unsafe { ::std::str::from_utf8_unchecked(s) });
+	let vuln_arr = req
+		.vulnstr
+		.as_bytes()
+		.chunks(6)
+		.map(|s| unsafe { ::std::str::from_utf8_unchecked(s) });
 
-    let mut ret: Vec<String> = Vec::new();
-    for v in vuln_arr.into_iter() {
-        if let Some(i) = vulns.get(v) {
-            ret.push(i.into());
-        }
-    }
+	let mut ret: Vec<String> = Vec::new();
+	for v in vuln_arr.into_iter() {
+		if let Some(i) = vulns.get(v) {
+			ret.push(i.into());
+		}
+	}
 
-    let firebase = Firebase::new(&config.db).unwrap();
-    let loc = firebase.at(&req.id).unwrap();
-    let time = Local::now().timestamp();
+	let firebase = Firebase::new(&config.db).unwrap();
+	let loc = firebase.at(&req.id).unwrap();
+	let time = Local::now().timestamp();
 
-    loc.push(&format!(
-        "{{\"points\":{},\"vulns\":{:?},\"time\":{}}}",
-        &req.points, ret, time
-    ))
-    .unwrap();
+	loc.push(&format!(
+		"{{\"points\":{},\"vulns\":{:?},\"time\":{}}}",
+		&req.points, ret, time
+	))
+	.unwrap();
 
-    println!("ID: {}Points: {}\nVulns: {:?}", req.id, req.points, ret);
+	println!("ID: {}Points: {}\nVulns: {:?}", req.id, req.points, ret);
 }
 
-fn main() {
-    rocket::ignite().mount("/", routes![vuln_post]).launch();
-}
+fn main() { rocket::ignite().mount("/", routes![vuln_post]).launch(); }
